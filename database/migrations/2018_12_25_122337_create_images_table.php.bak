@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateImagesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('images', function (Blueprint $table) {
+            $table->id();
+            $table->text('path')->nullable();
+            $table->text('image')->nullable();
+            $table->integer('order')->default(1)->nullable();
+            $table->timestamps();
+        });
+        Schema::create('image_product', function (Blueprint $table) {
+            $table->integer('image_id')->unsigned();
+            $table->unsignedBigInteger('product_id');
+            $table->primary(['image_id','product_id']);
+            // category_id & product_id should not be repeated like 1 5
+            // thats why both set as primary key aka unique
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('images');
+        Schema::dropIfExists('image_product');
+    }
+}

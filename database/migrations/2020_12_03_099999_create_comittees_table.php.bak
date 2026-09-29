@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateComitteesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('comittees', function (Blueprint $table) {
+            $table->id();
+            $table->text('name')->nullable();
+            $table->integer('comittee_type')->nullable();
+            $table->text('image')->nullable();
+            $table->text('designation')->nullable();
+            $table->text('mobile')->nullable()->unique();
+            $table->text('email')->nullable()->unique();
+            $table->text('address')->nullable();
+            $table->text('bio_graphy')->nullable();
+            $table->integer('position')->nullabe();
+            $table->timestamps();                  
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('comittees');
+    }
+}

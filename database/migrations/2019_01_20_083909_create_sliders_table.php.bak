@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateSlidersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('sliders', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title')->nullable();
+            $table->text('subtitle')->nullable();
+            $table->text('excerpt')->nullable();
+            $table->string('type')->nullable();
+            $table->integer('offer_id')->unsigned()->nullable();
+            $table->text('image')->nullable();
+            $table->integer('order')->default('1')->nullable();
+            $table->text('slug')->nullable();
+            $table->integer('status')->default('1')->nullable();
+            $table->integer('addedby_id')->unsigned()->nullable();
+            $table->integer('editedby_id')->unsigned()->nullable();
+            $table->timestamps();
+            $table->foreign('offer_id')->references('id')->on('offers')->onDelete('cascade');
+            $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('sliders');
+    }
+}
