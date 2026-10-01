@@ -59,7 +59,7 @@
     $donationFunds = \App\Project::where('parent', 0)->orderBy('title', 'ASC')->get();
 @endphp
 
-<section class="px-3 sm:px-5 lg:px-4 -mb-4">
+<section class="px-3 sm:px-5 lg:px-4 mt-6 lg:mt-8 -mb-4">
     <div class="max-w-6xl mx-auto rounded-2xl px-4 py-6 sm:px-8 sm:py-8 shadow-md" style="background-color:rgb(14 165 233);background-image:radial-gradient(circle at 20% 20%, rgba(255,255,255,.22) 0 2px, transparent 2px), radial-gradient(circle at 80% 70%, rgba(255,255,255,.12) 0 18px, transparent 19px);background-size:28px 28px, 120px 120px;">
         <h2 class="text-center text-3xl sm:text-4xl font-extrabold mb-6" style="color:#123524;">Make Your Donation</h2>
 
