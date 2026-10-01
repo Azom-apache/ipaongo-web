@@ -56,7 +56,55 @@
 
 @php
     $accentSchemes = config('tailwind_theme.accent_schemes');
+    $donationFunds = \App\Project::where('parent', 0)->orderBy('title', 'ASC')->get();
 @endphp
+
+<section class="px-3 sm:px-5 lg:px-4 -mb-4">
+    <div class="max-w-6xl mx-auto rounded-2xl px-4 py-6 sm:px-8 sm:py-8 shadow-md" style="background-color:rgb(14 165 233);background-image:radial-gradient(circle at 20% 20%, rgba(255,255,255,.22) 0 2px, transparent 2px), radial-gradient(circle at 80% 70%, rgba(255,255,255,.12) 0 18px, transparent 19px);background-size:28px 28px, 120px 120px;">
+        <h2 class="text-center text-3xl sm:text-4xl font-extrabold mb-6" style="color:#123524;">Make Your Donation</h2>
+
+        @if (session('error'))
+            <p class="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-3">{{ session('error') }}</p>
+        @endif
+        @if ($errors->any())
+            <div class="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-4 py-3">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="post" action="{{ route('donate.quick') }}" class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-end">
+            @csrf
+            <div>
+                <label for="donation-fund" class="block text-sm font-bold mb-2" style="color:#123524;">Donation Fund <span class="text-red-600">*</span></label>
+                <select id="donation-fund" name="project" required class="w-full rounded-lg border-0 bg-white px-3 py-3 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+                    <option value="">Select</option>
+                    @foreach ($donationFunds as $fund)
+                        <option value="{{ $fund->id }}" @selected(old('project') == $fund->id)>{{ $fund->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label for="donation-contact" class="block text-sm font-bold mb-2" style="color:#123524;">Phone / Email <span class="text-red-600">*</span></label>
+                <input id="donation-contact" type="text" name="contact" value="{{ old('contact') }}" required placeholder="Type mobile/email" class="w-full rounded-lg border-0 bg-white px-3 py-3 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+            </div>
+            <div>
+                <label for="donation-amount" class="block text-sm font-bold mb-2" style="color:#123524;">Donation Amount <span class="text-red-600">*</span></label>
+                <input id="donation-amount" type="number" name="budget" value="{{ old('budget') }}" min="10" step="0.01" required placeholder="Write in number" class="w-full rounded-lg border-0 bg-white px-3 py-3 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+            </div>
+            <div>
+                <button type="submit" class="w-full rounded-lg text-white font-bold py-3 px-6 shadow-sm hover:brightness-110 transition" style="background-color:#1f8f3a;">Donate</button>
+            </div>
+        </form>
+        <p class="text-center text-sm sm:text-base font-semibold mt-5" style="color:#123524;">
+            You will be redirected to SSLCommerz to complete this payment.
+        </p>
+    </div>
+</section>
+
 <!-- News Update Section Start Here-->
 <section class="newsupdate mb-8">
 	<div class="w-full lg:max-w-7xl mx-auto px-2">

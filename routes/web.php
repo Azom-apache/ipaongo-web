@@ -53,6 +53,7 @@ Route::get('/images/gallery/{filename}', function ($filename) {
     return redirect()->route('gallery.image', ['filename' => $filename]);
 });
 Route::post('donate/send', 'WebsiteController@donate_send')->name('donate.send');
+Route::post('donate/quick', 'WebsiteController@donate_quick')->name('donate.quick');
 
 Route::post('payment/success', 'PaymentController@success')->name('payment.success');
 Route::post('payment/failure', 'PaymentController@failure')->name('payment.failure');

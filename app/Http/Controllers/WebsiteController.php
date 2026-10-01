@@ -146,6 +146,76 @@ class WebsiteController extends Controller
         return back()->withInput()->with('error', $reason);
     }
 
+    public function donate_quick(Request $request)
+    {
+        $request->validate([
+            'project' => 'required|exists:projects,id',
+            'contact' => 'required|string|max:255',
+            'budget' => 'required|numeric|min:10',
+        ]);
+
+        if (! config('sslcommerz.store.id') || ! config('sslcommerz.store.password')) {
+            return back()->withInput()->with('error', 'SSLCommerz store credentials are not configured.');
+        }
+
+        $contact = trim($request->contact);
+        $isEmail = filter_var($contact, FILTER_VALIDATE_EMAIL);
+        $project = Project::findOrFail($request->project);
+        $amount = number_format((float) $request->budget, 2, '.', '');
+        $tranId = 'IPA'.now()->format('ymdHis').strtoupper(Str::random(4));
+        $email = $isEmail ? $contact : 'noreply@ipaongo.org';
+        $phone = $isEmail ? '01700000000' : $contact;
+
+        $donation = Donation::create([
+            'project_id' => $project->id,
+            'project_name' => $project->title,
+            'subcat_name' => 'Nullable',
+            'subsubcat_name' => 'Nullable',
+            'budget' => $amount,
+            'quantity' => 1,
+            'usd' => 0,
+            'donor_name' => 'Online Donor',
+            'address' => 'Bangladesh',
+            'country' => 'Bangladesh',
+            'email' => $email,
+            'contact' => $phone,
+            'tran_id' => $tranId,
+            'payment_status' => 'pending',
+            'payment_currency' => config('sslcommerz.store.currency', 'BDT'),
+            'donated_at' => now(),
+        ]);
+
+        try {
+            $sslc = new SSLCommerz();
+            $response = $sslc->amount($amount)
+                ->trxid($tranId)
+                ->product(Str::limit($project->title, 120, ''), 'Donation')
+                ->customer('Online Donor', $email, $phone, 'Bangladesh', 'Dhaka', null, '1000', 'Bangladesh')
+                ->setExtras((string) $donation->id)
+                ->make_payment();
+        } catch (\Throwable $exception) {
+            Log::error('SSLCommerz quick init failed: '.$exception->getMessage(), ['donation_id' => $donation->id]);
+            $donation->update([
+                'payment_status' => 'failed',
+                'payment_message' => 'Unable to start SSLCommerz payment.',
+            ]);
+
+            return back()->withInput()->with('error', 'Unable to start SSLCommerz payment. Please try again.');
+        }
+
+        if ($response instanceof RedirectResponse) {
+            return $response;
+        }
+
+        $reason = is_string($response) && $response !== '' ? $response : 'Unable to start SSLCommerz payment.';
+        $donation->update([
+            'payment_status' => 'failed',
+            'payment_message' => $reason,
+        ]);
+
+        return back()->withInput()->with('error', $reason);
+    }
+
     public function video()
     {
         $video = Video::latest()->paginate(12);
