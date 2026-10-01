@@ -13,7 +13,8 @@ class CreateProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        if (! Schema::hasTable('profiles')) {
+Schema::create('profiles', function (Blueprint $table) {
            
             $table->id();
             $table->text('name')->nullable();
@@ -43,7 +44,7 @@ class CreateProfilesTable extends Migration
             $table->integer('status')->default(1);
 			$table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

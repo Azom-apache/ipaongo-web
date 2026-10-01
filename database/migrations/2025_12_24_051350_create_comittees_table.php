@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comittees', function (Blueprint $table) {
+        if (! Schema::hasTable('comittees')) {
+Schema::create('comittees', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
             $table->integer('comittee_type')->nullable();
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->integer('position')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

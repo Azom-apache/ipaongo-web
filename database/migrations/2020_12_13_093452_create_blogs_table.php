@@ -13,7 +13,8 @@ class CreateBlogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        if (! Schema::hasTable('blogs')) {
+Schema::create('blogs', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
             $table->integer('status')->default(1);
@@ -25,7 +26,7 @@ class CreateBlogsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('profle_id')->references('id')->on('profiles')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

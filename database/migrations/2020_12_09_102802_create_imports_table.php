@@ -13,13 +13,14 @@ class CreateImportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('imports', function (Blueprint $table) {
+        if (! Schema::hasTable('imports')) {
+Schema::create('imports', function (Blueprint $table) {
             $table->id();
             $table->text('student_code')->nullable();
             $table->text('student_name')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

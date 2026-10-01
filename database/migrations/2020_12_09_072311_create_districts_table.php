@@ -13,12 +13,13 @@ class CreateDistrictsTable extends Migration
      */
     public function up()
     {
-        Schema::create('districts', function (Blueprint $table) {
+        if (! Schema::hasTable('districts')) {
+Schema::create('districts', function (Blueprint $table) {
             $table->id();
             $table->text('district_name')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('donations', function (Blueprint $table) {
+        if (! Schema::hasTable('donations')) {
+Schema::create('donations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('subcat_id')->nullable();
@@ -35,7 +36,7 @@ return new class extends Migration
             $table->foreign('subcat_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('subsubcat_id')->references('id')->on('projects')->onDelete('cascade');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

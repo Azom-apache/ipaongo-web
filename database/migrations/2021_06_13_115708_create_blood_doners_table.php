@@ -13,7 +13,8 @@ class CreateBloodDonersTable extends Migration
      */
     public function up()
     {
-        Schema::create('blood_doners', function (Blueprint $table) {
+        if (! Schema::hasTable('blood_doners')) {
+Schema::create('blood_doners', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
             $table->string('mobile', 20);
@@ -25,7 +26,7 @@ class CreateBloodDonersTable extends Migration
             $table->text('image')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

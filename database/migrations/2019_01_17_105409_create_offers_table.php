@@ -13,7 +13,8 @@ class CreateOffersTable extends Migration
      */
     public function up()
     {
-        Schema::create('offers', function (Blueprint $table) {
+        if (! Schema::hasTable('offers')) {
+Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
             $table->integer('type')->nullable();
@@ -32,7 +33,7 @@ class CreateOffersTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        if (! Schema::hasTable('images')) {
+Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->text('path')->nullable();
             $table->text('image')->nullable();
             $table->integer('order')->default(1)->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -11,11 +11,29 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('galleries')) {
+            return;
+        }
+
+        $missing = ['parent', 'image', 'title', 'slug'];
+        $missing = array_filter($missing, fn ($column) => ! Schema::hasColumn('galleries', $column));
+        if ($missing === []) {
+            return;
+        }
+
         Schema::table('galleries', function (Blueprint $table) {
-            $table->integer('parent')->default(0)->after('id');
-            $table->string('image')->nullable()->after('photo_path');
-            $table->string('title')->nullable()->after('image');
-            $table->string('slug')->nullable()->after('title');
+            if (! Schema::hasColumn('galleries', 'parent')) {
+                $table->integer('parent')->default(0);
+            }
+            if (! Schema::hasColumn('galleries', 'image')) {
+                $table->string('image')->nullable();
+            }
+            if (! Schema::hasColumn('galleries', 'title')) {
+                $table->string('title')->nullable();
+            }
+            if (! Schema::hasColumn('galleries', 'slug')) {
+                $table->string('slug')->nullable();
+            }
         });
     }
 

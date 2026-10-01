@@ -13,7 +13,8 @@ class CreateMembersTable extends Migration
      */
     public function up()
     {
-        Schema::create('members', function (Blueprint $table) {
+        if (! Schema::hasTable('members')) {
+Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->text('name')->nullable();
             $table->text('image')->nullable();
@@ -25,7 +26,7 @@ class CreateMembersTable extends Migration
             $table->integer('position')->nullabe();
             $table->timestamps();                  
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -13,7 +13,8 @@ class CreateNewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('news', function (Blueprint $table) {
+        if (! Schema::hasTable('news')) {
+Schema::create('news', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
             $table->text('excerpt')->nullable();
@@ -29,7 +30,7 @@ class CreateNewsTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

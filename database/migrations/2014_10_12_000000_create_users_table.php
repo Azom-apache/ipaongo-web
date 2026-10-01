@@ -13,7 +13,8 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        if (! Schema::hasTable('users')) {
+Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -25,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -13,7 +13,8 @@ class CreateDeliveryOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_options', function (Blueprint $table) {
+        if (! Schema::hasTable('delivery_options')) {
+Schema::create('delivery_options', function (Blueprint $table) {
             $table->id();
             $table->string('region')->nullable();
             $table->string('district')->nullable();
@@ -28,7 +29,7 @@ class CreateDeliveryOptionsTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

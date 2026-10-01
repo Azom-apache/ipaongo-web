@@ -13,7 +13,8 @@ class CreateAdsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ads', function (Blueprint $table) {
+        if (! Schema::hasTable('ads')) {
+Schema::create('ads', function (Blueprint $table) {
             $table->id();
             $table->text('image')->nullable();
             $table->text('code')->nullable();
@@ -21,7 +22,7 @@ class CreateAdsTable extends Migration
             $table->integer('ad_type')->default(0);
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

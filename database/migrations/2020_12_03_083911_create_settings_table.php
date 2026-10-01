@@ -13,7 +13,8 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
+        if (! Schema::hasTable('settings')) {
+Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->text('site_title')->nullable();
             $table->text('domain_name')->nullable();
@@ -32,7 +33,7 @@ class CreateSettingsTable extends Migration
             $table->text('favicon')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

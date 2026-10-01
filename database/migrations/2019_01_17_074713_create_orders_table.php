@@ -13,7 +13,8 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        if (! Schema::hasTable('orders')) {
+Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('coupon_id')->nullable();
             $table->string('invoice_no')->nullable();
@@ -48,7 +49,7 @@ class CreateOrdersTable extends Migration
             $table->foreign('orderby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('cascade');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

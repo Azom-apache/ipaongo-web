@@ -13,7 +13,8 @@ class CreateStocksTable extends Migration
      */
     public function up()
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        if (! Schema::hasTable('stocks')) {
+Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('size')->nullable();
@@ -28,7 +29,7 @@ class CreateStocksTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

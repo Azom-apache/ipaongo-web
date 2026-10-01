@@ -13,7 +13,8 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        if (! Schema::hasTable('categories')) {
+Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
@@ -33,7 +34,7 @@ class CreateCategoriesTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

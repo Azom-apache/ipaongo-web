@@ -13,13 +13,14 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('departments', function (Blueprint $table) {
+        if (! Schema::hasTable('departments')) {
+Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->text('department_name')->nullable();
             
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,9 +14,17 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        if (! Schema::hasTable('products')) {
+        $categoryIdType = Schema::hasTable('categories')
+            ? DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'id'")->Type
+            : 'bigint unsigned';
+Schema::create('products', function (Blueprint $table) use ($categoryIdType) {
             $table->id();
-            $table->unsignedInteger('category_id')->nullable();
+            if (str_contains($categoryIdType, 'bigint')) {
+                $table->unsignedBigInteger('category_id')->nullable();
+            } else {
+                $table->unsignedInteger('category_id')->nullable();
+            }
             $table->string('title')->nullable();
             $table->string('code')->nullable();
             $table->integer('brand_id')->nullable();
@@ -46,8 +55,17 @@ class CreateProductsTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-        Schema::create('category_product', function (Blueprint $table) {
-            $table->unsignedInteger('category_id');
+        }
+        if (! Schema::hasTable('category_product')) {
+        $categoryIdType = Schema::hasTable('categories')
+            ? DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'id'")->Type
+            : 'bigint unsigned';
+Schema::create('category_product', function (Blueprint $table) use ($categoryIdType) {
+            if (str_contains($categoryIdType, 'bigint')) {
+                $table->unsignedBigInteger('category_id');
+            } else {
+                $table->unsignedInteger('category_id');
+            }
             $table->unsignedBigInteger('product_id');
             $table->primary(['category_id','product_id']);
             // category_id & product_id should not be repeated like 1 5
@@ -55,7 +73,7 @@ class CreateProductsTable extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

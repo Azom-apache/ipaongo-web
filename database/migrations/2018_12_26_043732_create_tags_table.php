@@ -13,21 +13,23 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        if (! Schema::hasTable('tags')) {
+Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->nullable();
             $table->timestamps();
         });
-
-        Schema::create('product_tag', function (Blueprint $table) {
+        }
+        if (! Schema::hasTable('product_tag')) {
+Schema::create('product_tag', function (Blueprint $table) {
             $table->integer('product_id');
             $table->integer('tag_id');
             $table->primary(['product_id','tag_id']);
             // product_id & tag_id should not be repeated like 1 5
             // thats why both set as primary key aka unique
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

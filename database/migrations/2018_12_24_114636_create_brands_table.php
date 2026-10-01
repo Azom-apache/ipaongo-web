@@ -13,7 +13,8 @@ class CreateBrandsTable extends Migration
      */
     public function up()
     {
-        Schema::create('brands', function (Blueprint $table) {
+        if (! Schema::hasTable('brands')) {
+Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
             $table->text('image')->nullable();
@@ -25,7 +26,7 @@ class CreateBrandsTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

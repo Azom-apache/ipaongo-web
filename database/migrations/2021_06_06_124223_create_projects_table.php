@@ -13,7 +13,8 @@ class CreateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        if (! Schema::hasTable('projects')) {
+Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->integer('parent')->default(0);
             $table->string('title', 255);
@@ -25,7 +26,7 @@ class CreateProjectsTable extends Migration
             $table->string('update_id')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -11,17 +11,34 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->text('instagram')->nullable()->after('map');
-            $table->text('welcome_message')->nullable()->after('favicon');
-            $table->text('welcome_title')->nullable()->after('welcome_message');
-            $table->text('successfull_project')->nullable()->after('welcome_title');
-            $table->text('people_impact')->nullable()->after('successfull_project');
-            $table->text('money_donate')->nullable()->after('people_impact');
-            $table->text('total_volunteer')->nullable()->after('money_donate');
-            $table->text('food')->nullable()->after('total_volunteer');
-            $table->text('cloth')->nullable()->after('food');
-            $table->text('other')->nullable()->after('cloth');
+        if (! Schema::hasTable('settings')) {
+            return;
+        }
+
+        $columns = [
+            'instagram',
+            'welcome_message',
+            'welcome_title',
+            'successfull_project',
+            'people_impact',
+            'money_donate',
+            'total_volunteer',
+            'food',
+            'cloth',
+            'other',
+        ];
+
+        $missing = array_filter($columns, fn ($column) => ! Schema::hasColumn('settings', $column));
+        if ($missing === []) {
+            return;
+        }
+
+        Schema::table('settings', function (Blueprint $table) use ($columns) {
+            foreach ($columns as $column) {
+                if (! Schema::hasColumn('settings', $column)) {
+                    $table->text($column)->nullable();
+                }
+            }
         });
     }
 

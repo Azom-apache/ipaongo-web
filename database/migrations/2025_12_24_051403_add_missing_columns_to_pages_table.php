@@ -11,6 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('pages')) {
+            return;
+        }
+
+        $missing = ['subtitle', 'image', 'excerpt', 'description', 'slug', 'order', 'addedby_id', 'editedby_id'];
+        $missing = array_filter($missing, fn ($column) => ! Schema::hasColumn('pages', $column));
+        if ($missing === []) {
+            return;
+        }
+
         Schema::table('pages', function (Blueprint $table) {
             if (! Schema::hasColumn('pages', 'subtitle')) {
                 $table->string('subtitle')->nullable()->after('title');

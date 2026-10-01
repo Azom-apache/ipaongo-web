@@ -13,7 +13,8 @@ class CreateRatingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ratings', function (Blueprint $table) {
+        if (! Schema::hasTable('ratings')) {
+Schema::create('ratings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
@@ -27,7 +28,7 @@ class CreateRatingsTable extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

@@ -13,13 +13,14 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        if (! Schema::hasTable('pages')) {
+Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
             $table->longText('content')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

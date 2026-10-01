@@ -13,7 +13,8 @@ class CreateAreasTable extends Migration
      */
     public function up()
     {
-        Schema::create('areas', function (Blueprint $table) {
+        if (! Schema::hasTable('areas')) {
+Schema::create('areas', function (Blueprint $table) {
             $table->id();
             $table->text('area')->nullable();
             $table->unsignedBigInteger('district_id')->nullable();
@@ -21,7 +22,7 @@ class CreateAreasTable extends Migration
             $table->timestamps();
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

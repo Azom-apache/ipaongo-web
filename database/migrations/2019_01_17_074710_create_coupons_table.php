@@ -13,7 +13,8 @@ class CreateCouponsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coupons', function (Blueprint $table) {
+        if (! Schema::hasTable('coupons')) {
+Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
             $table->string('code')->nullable();
@@ -31,7 +32,7 @@ class CreateCouponsTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('cascade');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

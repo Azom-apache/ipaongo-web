@@ -13,7 +13,8 @@ class CreateSiteSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('site_settings', function (Blueprint $table) {
+        if (! Schema::hasTable('site_settings')) {
+Schema::create('site_settings', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
             $table->text('subtitle')->nullable();
@@ -36,7 +37,7 @@ class CreateSiteSettingsTable extends Migration
             $table->foreign('addedby_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

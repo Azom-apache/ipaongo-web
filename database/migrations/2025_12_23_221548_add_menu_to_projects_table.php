@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasColumn('projects', 'menu')) {
+            return;
+        }
+
         Schema::table('projects', function (Blueprint $table) {
             $table->integer('menu')->default(0)->after('order');
         });

@@ -13,7 +13,8 @@ class CreateQuestionAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::create('question_answers', function (Blueprint $table) {
+        if (! Schema::hasTable('question_answers')) {
+Schema::create('question_answers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('askby_id')->nullable();
             $table->unsignedBigInteger('ansby_id')->nullable();
@@ -28,7 +29,7 @@ class CreateQuestionAnswersTable extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('cascade');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

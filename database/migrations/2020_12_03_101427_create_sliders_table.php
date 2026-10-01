@@ -13,13 +13,14 @@ class CreateSlidersTable extends Migration
      */
     public function up()
     {
-        Schema::create('sliders', function (Blueprint $table) {
+        if (! Schema::hasTable('sliders')) {
+Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->text('image')->nullable();
             $table->text('caption')->nullable();
             $table->timestamps();
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.

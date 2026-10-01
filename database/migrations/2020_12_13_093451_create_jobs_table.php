@@ -13,7 +13,8 @@ class CreateJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobs', function (Blueprint $table) {
+        if (! Schema::hasTable('jobs')) {
+Schema::create('jobs', function (Blueprint $table) {
             
             $table->id();
             $table->text('title')->nullable();
@@ -28,7 +29,7 @@ class CreateJobsTable extends Migration
             $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('set null');
             $table->foreign('verify_by')->references('id')->on('users')->onDelete('set null');
         });
-    }
+        }    }
 
     /**
      * Reverse the migrations.
