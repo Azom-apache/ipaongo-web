@@ -50,6 +50,31 @@
                                     @endif
                                     <p><strong>Donation Date:</strong> {{ $donation->donated_at->format('d M Y, H:i') }}
                                     </p>
+                                    <p><strong>Payment Status:</strong> {{ $donation->payment_status ? ucfirst($donation->payment_status) : 'Recorded' }}</p>
+                                    @if ($donation->tran_id)
+                                        <p><strong>Transaction ID:</strong> {{ $donation->tran_id }}</p>
+                                    @endif
+                                    @if ($donation->paid_amount)
+                                        <p><strong>Paid Amount:</strong> {{ number_format($donation->paid_amount, 2) }} {{ $donation->payment_currency }}</p>
+                                    @endif
+                                    @if ($donation->bank_tran_id)
+                                        <p><strong>Bank Transaction ID:</strong> {{ $donation->bank_tran_id }}</p>
+                                    @endif
+                                    @if ($donation->card_type)
+                                        <p><strong>Card / Channel:</strong> {{ $donation->card_type }}</p>
+                                    @endif
+                                    @if ($donation->card_issuer)
+                                        <p><strong>Issuer:</strong> {{ $donation->card_issuer }}</p>
+                                    @endif
+                                    @if ($donation->val_id)
+                                        <p><strong>Validation ID:</strong> {{ $donation->val_id }}</p>
+                                    @endif
+                                    @if ($donation->paid_at)
+                                        <p><strong>Paid At:</strong> {{ $donation->paid_at->format('d M Y, H:i') }}</p>
+                                    @endif
+                                    @if ($donation->payment_message)
+                                        <p><strong>Gateway Message:</strong> {{ $donation->payment_message }}</p>
+                                    @endif
                                 </div>
                             </div>
 

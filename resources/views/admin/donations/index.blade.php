@@ -26,6 +26,7 @@
                                         <th>Project</th>
                                         <th>Amount (BDT)</th>
                                         <th>Amount (USD)</th>
+                                        <th>Payment</th>
                                         <th>Date</th>
                                         <th>Action</th>
                                     </tr>
@@ -41,6 +42,7 @@
                                             <td>{{ $donation->project_name }}</td>
                                             <td>{{ $donation->budget ? number_format($donation->budget, 2) : 'N/A' }}</td>
                                             <td>{{ $donation->usd ? number_format($donation->usd, 2) : 'N/A' }}</td>
+                                            <td>{{ $donation->payment_status ? ucfirst($donation->payment_status) : 'Recorded' }}</td>
                                             <td>{{ $donation->donated_at->format('d M Y') }}</td>
                                             <td>
                                                 <div class="btn-group">
@@ -66,7 +68,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="8">{{ $donations->links() }}</th>
+                                        <th colspan="9">{{ $donations->links() }}</th>
                                     </tr>
                                 </tfoot>
                             </table>

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->integer('status')->default(1)->change();
-        });
+        if (! Schema::hasColumn('projects', 'status')) {
+            return;
+        }
+
+        DB::table('projects')->whereNull('status')->update(['status' => 1]);
+        DB::statement('ALTER TABLE projects MODIFY status INT NOT NULL DEFAULT 1');
     }
 
     /**
@@ -21,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->integer('status')->default(null)->change();
-        });
+        if (! Schema::hasColumn('projects', 'status')) {
+            return;
+        }
+
+        DB::statement('ALTER TABLE projects MODIFY status INT NULL DEFAULT NULL');
     }
 };

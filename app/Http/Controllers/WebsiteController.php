@@ -21,6 +21,9 @@ use App\Member;
 use App\News;
 use App\Video;
 use App\Donation;
+use DGvai\SSLCommerz\SSLCommerz;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -60,154 +63,87 @@ class WebsiteController extends Controller
 
     public function donate_send(Request $request)
     {
+        $request->validate([
+            'project' => 'required|exists:projects,id',
+            'subcat' => 'nullable|exists:projects,id',
+            'subsubcat' => 'nullable|exists:projects,id',
+            'budget' => 'required|numeric|min:10',
+            'quantity' => 'required|integer|min:1',
+            'usd' => 'required|numeric|min:0',
+            'donor' => 'required|string|max:255',
+            'address' => 'required|string|max:1000',
+            'country' => 'required|string|max:255',
+            'mail' => 'required|email|max:255',
+            'contact' => 'required|string|max:30',
+            'image' => 'required|file|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:5120',
+        ]);
 
-        if ($request->hasFile('image')) {
-
-            $project = Project::where('id', $request->project)->first();
-            $subcat = Project::where('id', $request->subcat)->first();
-            $subsubcat = Project::where('id', $request->subsubcat)->first();
-
-            $project_name = $project->title;
-            // $subcat_name = $project->title;
-            if (isset($request->subcat)) {
-                $subcat_name = $project->title;
-            } else {
-                $subcat_name = 'Nullable';
-            }
-            if (isset($request->subsubcat)) {
-                $subsubcat_name = $project->title;
-            } else {
-                $subsubcat_name = 'Nullable';
-            }
-
-            // $subsubcat_name = $project->title;
-
-
-
-            // $validatedData = $request->validate([
-            //     'issuedate' => 'required',
-            //     'name' => 'required|max:255',
-            //     'email' => 'required|email|max:255',
-            //     'mobile' => 'required|max:255',
-            //     'image' => 'file|mimes:jpeg,png,jpg,gif,svg,ai,psd,pdf,zip|max:25600',
-            // ]);
-
-            $file = request()->image->getClientOriginalName();
-            $filename = pathinfo($file, PATHINFO_FILENAME);
-            $extension = pathinfo($file, PATHINFO_EXTENSION);
-
-            $fileName = Str::slug($filename, '_') . '_' . time() . '.' . request()->image->getClientOriginalExtension();
-
-            request()->image->move(public_path('images'), $fileName);
-
-            $sourceofFile = public_path('images') . '/' . $fileName;
-
-            // Send email
-            \Mail::send(
-                'email.myTestMail',
-                array(
-                    'title' => 'From donar',
-                    'project' => $project_name,
-                    'subcat' => $subcat_name,
-                    'subsubcat' => $subsubcat_name,
-                    'budget' => $request->get('budget'),
-                    'quantity' => $request->get('quantity'),
-                    'usd' => $request->get('usd'),
-                    'donor' => $request->get('donor'),
-                    'address' => $request->get('address'),
-                    'country' => $request->get('country'),
-                    'mail' => $request->get('mail'),
-                    'contact' => $request->get('contact'),
-                ),
-                function ($message) use ($request) {
-                    $message->from('ipaongo@tutulint.com');
-                    $message->to([$request->get('mail'), 'ipaongo@tutulint.com'])->subject('Donor Information');
-                }
-            );
-
-            // Store donation data in database
-            Donation::create([
-                'project_id' => $request->project,
-                'subcat_id' => $request->subcat ?: null,
-                'subsubcat_id' => $request->subsubcat ?: null,
-                'project_name' => $project_name,
-                'subcat_name' => $subcat_name,
-                'subsubcat_name' => $subsubcat_name,
-                'budget' => $request->get('budget'),
-                'quantity' => $request->get('quantity'),
-                'usd' => $request->get('usd'),
-                'donor_name' => $request->get('donor'),
-                'address' => $request->get('address'),
-                'country' => $request->get('country'),
-                'email' => $request->get('mail'),
-                'contact' => $request->get('contact'),
-                'image' => $fileName,
-                'donated_at' => now(),
-            ]);
-
-            return back()->with('success', 'Successfully Send');
-        } else {
-            $project = Project::where('id', $request->project)->first();
-            $subcat = Project::where('id', $request->subcat)->first();
-            $subsubcat = Project::where('id', $request->subsubcat)->first();
-
-            $project_name = $project->title;
-            // $subcat_name = $project->title;
-            if (isset($request->subcat)) {
-                $subcat_name = $project->title;
-            } else {
-                $subcat_name = 'Nullable';
-            }
-            if (isset($request->subsubcat)) {
-                $subsubcat_name = $project->title;
-            } else {
-                $subsubcat_name = 'Nullable';
-            }
-            // Send email
-            \Mail::send(
-                'email.myTestMail',
-                array(
-                    'title' => 'From donar',
-                    'project' => $project_name,
-                    'subcat' => $subcat_name,
-                    'subsubcat' => $subsubcat_name,
-                    'budget' => $request->get('budget'),
-                    'quantity' => $request->get('quantity'),
-                    'usd' => $request->get('usd'),
-                    'donor' => $request->get('donor'),
-                    'address' => $request->get('address'),
-                    'country' => $request->get('country'),
-                    'mail' => $request->get('mail'),
-                    'contact' => $request->get('contact'),
-                ),
-                function ($message) use ($request) {
-                    $message->from('ipaongo@tutulint.com');
-                    $message->to([$request->get('mail'), 'ipaongo@tutulint.com'])->subject('Donor Information');
-                }
-            );
-
-            // Store donation data in database
-            Donation::create([
-                'project_id' => $request->project,
-                'subcat_id' => $request->subcat ?: null,
-                'subsubcat_id' => $request->subsubcat ?: null,
-                'project_name' => $project_name,
-                'subcat_name' => $subcat_name,
-                'subsubcat_name' => $subsubcat_name,
-                'budget' => $request->get('budget'),
-                'quantity' => $request->get('quantity'),
-                'usd' => $request->get('usd'),
-                'donor_name' => $request->get('donor'),
-                'address' => $request->get('address'),
-                'country' => $request->get('country'),
-                'email' => $request->get('mail'),
-                'contact' => $request->get('contact'),
-                'image' => null,
-                'donated_at' => now(),
-            ]);
-
-            return back()->with('success', 'Successfully Send');
+        if (! config('sslcommerz.store.id') || ! config('sslcommerz.store.password')) {
+            return back()->withInput()->with('error', 'SSLCommerz store credentials are not configured.');
         }
+
+        $project = Project::findOrFail($request->project);
+        $subcat = $request->filled('subcat') ? Project::find($request->subcat) : null;
+        $subsubcat = $request->filled('subsubcat') ? Project::find($request->subsubcat) : null;
+
+        $file = $request->file('image');
+        $fileName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME), '_').'_'.time().'.'.$file->getClientOriginalExtension();
+        $file->move(public_path('images'), $fileName);
+
+        $amount = number_format((float) $request->budget, 2, '.', '');
+        $tranId = 'IPA'.now()->format('ymdHis').strtoupper(Str::random(4));
+
+        $donation = Donation::create([
+            'project_id' => $project->id,
+            'subcat_id' => $subcat->id ?? null,
+            'subsubcat_id' => $subsubcat->id ?? null,
+            'project_name' => $project->title,
+            'subcat_name' => $subcat->title ?? 'Nullable',
+            'subsubcat_name' => $subsubcat->title ?? 'Nullable',
+            'budget' => $amount,
+            'quantity' => $request->quantity,
+            'usd' => $request->usd,
+            'donor_name' => $request->donor,
+            'address' => $request->address,
+            'country' => $request->country,
+            'email' => $request->mail,
+            'contact' => $request->contact,
+            'image' => $fileName,
+            'tran_id' => $tranId,
+            'payment_status' => 'pending',
+            'payment_currency' => config('sslcommerz.store.currency', 'BDT'),
+            'donated_at' => now(),
+        ]);
+
+        try {
+            $sslc = new SSLCommerz();
+            $response = $sslc->amount($amount)
+                ->trxid($tranId)
+                ->product(Str::limit($project->title, 120, ''), 'Donation')
+                ->customer($request->donor, $request->mail, $request->contact, $request->address, 'Dhaka', null, '1000', $request->country)
+                ->setExtras((string) $donation->id)
+                ->make_payment();
+        } catch (\Throwable $exception) {
+            Log::error('SSLCommerz init failed: '.$exception->getMessage(), ['donation_id' => $donation->id]);
+            $donation->update([
+                'payment_status' => 'failed',
+                'payment_message' => 'Unable to start SSLCommerz payment.',
+            ]);
+
+            return back()->withInput()->with('error', 'Unable to start SSLCommerz payment. Please try again.');
+        }
+
+        if ($response instanceof RedirectResponse) {
+            return $response;
+        }
+
+        $reason = is_string($response) && $response !== '' ? $response : 'Unable to start SSLCommerz payment.';
+        $donation->update([
+            'payment_status' => 'failed',
+            'payment_message' => $reason,
+        ]);
+
+        return back()->withInput()->with('error', $reason);
     }
 
     public function video()

@@ -25,13 +25,26 @@ class Donation extends Model
         'email',
         'contact',
         'image',
+        'tran_id',
+        'payment_status',
+        'payment_currency',
+        'paid_amount',
+        'val_id',
+        'bank_tran_id',
+        'card_type',
+        'card_no',
+        'card_issuer',
+        'payment_message',
+        'paid_at',
         'donated_at'
     ];
 
     protected $casts = [
         'budget' => 'decimal:2',
         'usd' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
         'donated_at' => 'datetime',
+        'paid_at' => 'datetime',
     ];
 
     public function project()

@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasColumn('galleries', 'photo_path') || ! Schema::hasColumn('galleries', 'caption')) {
+            return;
+        }
+
         Schema::table('galleries', function (Blueprint $table) {
             $table->string('photo_path')->nullable()->change();
             $table->string('caption')->nullable()->change();

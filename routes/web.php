@@ -54,6 +54,12 @@ Route::get('/images/gallery/{filename}', function ($filename) {
 });
 Route::post('donate/send', 'WebsiteController@donate_send')->name('donate.send');
 
+Route::post('payment/success', 'PaymentController@success')->name('payment.success');
+Route::post('payment/failure', 'PaymentController@failure')->name('payment.failure');
+Route::post('payment/cancel', 'PaymentController@cancel')->name('payment.cancel');
+Route::post('payment/ipn', 'PaymentController@ipn')->name('payment.ipn');
+Route::get('payment/receipt/{tranId}', 'PaymentController@receipt')->name('payment.receipt');
+
 
 
 Route::get('/jobs', 'WebsiteController@jobs')->name('jobs');

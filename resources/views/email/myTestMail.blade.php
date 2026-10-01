@@ -12,6 +12,9 @@
 <p>Donor Country    = {{$country}}</p>
 <p>Donor Email      = {{$mail}}</p>
 <p>Donor Contact Number = {{$contact}}</p>
+@if(!empty($tran_id))
+<p>Transaction ID = {{$tran_id}}</p>
+@endif
 <br>
 <h3>Thank's </h3>
 <h4>IPAO</h4>

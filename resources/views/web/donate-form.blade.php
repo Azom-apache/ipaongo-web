@@ -89,12 +89,13 @@
 
                     <!-- Budget -->
                     <div>
-                        <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">Budget Amount</label>
+                        <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">Amount (BDT)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-dollar-sign text-gray-400"></i>
                             </div>
-                            <input value="{{old('budget')}}" type="text" name="budget" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="budget" placeholder="Enter budget amount" required>
+                            <input value="{{old('budget')}}" type="number" min="10" step="0.01" name="budget" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="budget" placeholder="Amount charged in BDT" required>
+                            <p class="mt-1 text-xs text-gray-500">This amount is charged in BDT through SSLCommerz. Minimum 10 BDT.</p>
                         </div>
                     </div>
 
@@ -192,10 +193,10 @@
                     <!-- Submit Button -->
                     <div class="pt-4">
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Submit Donation Request
+                            Pay with SSLCommerz
                         </button>
                         <p class="text-center text-sm text-gray-500 mt-3">
-                            By submitting this form, you agree to our terms and conditions.
+                            You will be redirected to the SSLCommerz payment page. The donation is saved after a successful payment.
                         </p>
                     </div>
                   </form>

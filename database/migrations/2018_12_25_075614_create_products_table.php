@@ -15,7 +15,7 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedInteger('category_id')->nullable();
             $table->string('title')->nullable();
             $table->string('code')->nullable();
             $table->integer('brand_id')->nullable();
@@ -47,7 +47,7 @@ class CreateProductsTable extends Migration
             $table->foreign('editedby_id')->references('id')->on('users')->onDelete('set null');
         });
         Schema::create('category_product', function (Blueprint $table) {
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedInteger('category_id');
             $table->unsignedBigInteger('product_id');
             $table->primary(['category_id','product_id']);
             // category_id & product_id should not be repeated like 1 5

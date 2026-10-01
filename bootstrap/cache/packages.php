@@ -1,4 +1,11 @@
 <?php return array (
+  'dgvai/laravel-sslcommerz' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'DGvai\\SSLCommerz\\SSLCommerzServiceProvider',
+    ),
+  ),
   'laravel/tinker' => 
   array (
     'providers' => 
