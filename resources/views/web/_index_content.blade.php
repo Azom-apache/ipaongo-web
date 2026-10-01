@@ -11,7 +11,6 @@
 .manage_photo{
     margin: 5px;
 }
-
 </style>
 <section class="slider-section">
         <div class="slider" style='width:100%;'>
