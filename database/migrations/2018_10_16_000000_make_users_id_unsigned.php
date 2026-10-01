@@ -12,6 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        $migrationId = DB::selectOne("SHOW COLUMNS FROM migrations WHERE Field = 'id'");
+        if ($migrationId && ! str_contains((string) $migrationId->Extra, 'auto_increment')) {
+            DB::statement('ALTER TABLE migrations MODIFY id INT UNSIGNED NOT NULL AUTO_INCREMENT');
+        }
+
         if (! Schema::hasTable('users') || ! Schema::hasColumn('users', 'id')) {
             return;
         }
